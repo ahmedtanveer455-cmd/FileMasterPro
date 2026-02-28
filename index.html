@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FileMaster Pro | Free Image & PDF Utility Hub</title>
+    
+    <meta name="description" content="Free online tool to compress image to 50kb, merge PDF without watermark, and convert JPG to PDF offline. Resize passport size photo online free.">
+    <meta name="keywords" content="How to compress image to 50kb for online form, Best free way to merge PDF files without watermark, Convert JPG to PDF offline on mobile browser, Resize passport size photo online free">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+
+    <style>
+        :root { --sidebar: #0f172a; --primary: #3b82f6; --accent: #10b981; --bg: #f8fafc; --card: #ffffff; }
+        * { box-sizing: border-box; transition: all 0.2s ease; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; height: 100vh; background: var(--bg); color: #1e293b; overflow: hidden; }
+        
+        /* Sidebar Navigation */
+        .sidebar { width: 280px; background: var(--sidebar); color: white; padding: 25px; display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: thin; z-index: 100; }
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--primary); text-align: center; margin-bottom: 30px; letter-spacing: -1px; }
+        .nav-label { font-size: 11px; color: #64748b; font-weight: 700; margin: 20px 0 10px 5px; text-transform: uppercase; }
+        .nav-btn { width: 100%; background: none; border: none; color: #94a3b8; padding: 12px 15px; text-align: left; cursor: pointer; border-radius: 12px; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+        .nav-btn:hover, .nav-btn.active { background: rgba(59, 130, 246, 0.1); color: white; box-shadow: inset 4px 0 0 var(--primary); }
+
+        /* Main Workspace */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        .ad-container { width: 100%; max-width: 728px; background: #fff; border: 1px dashed #cbd5e1; margin: 15px 0; min-height: 90px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 12px; color: #94a3b8; }
+        
+        .tool-card { display: none; background: var(--card); padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); width: 100%; max-width: 800px; border: 1px solid #e2e8f0; }
+        .tool-card.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tools UI */
+        h2 { font-size: 24px; margin-bottom: 25px; color: #0f172a; text-align: center; }
+        .ui-box { background: #f1f5f9; padding: 25px; border-radius: 18px; margin-bottom: 25px; }
+        .input-field { width: 100%; padding: 14px; border: 2.5px solid #e2e8f0; border-radius: 12px; font-size: 15px; margin-bottom: 15px; outline: none; }
+        .input-field:focus { border-color: var(--primary); }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 16px; display: block; text-align: center; text-decoration: none; }
+        .btn-main { background: var(--primary); color: white; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4); }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5); }
+        .btn-success { background: var(--accent); color: white; margin-top: 15px; }
+
+        /* SEO Article Styling */
+        .article-area { margin-top: 40px; border-top: 2px solid #f1f5f9; padding-top: 30px; line-height: 1.8; }
+        .article-area h3 { color: #1e293b; font-size: 20px; }
+        .article-area p { margin-bottom: 15px; text-align: justify; color: #475569; }
+
+        /* Modal for Ads */
+        #adModal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-box { background: white; padding: 40px; border-radius: 25px; text-align: center; max-width: 450px; width: 90%; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">FileMaster</div>
+    
+    <span class="nav-label">Core Tools</span>
+    <button class="nav-btn active" onclick="showTool('resizer', this)">📐 Image Resizer & KB</button>
+    <button class="nav-btn" onclick="showTool('converter', this)">🔄 Any Image Convert</button>
+    
+    <span class="nav-label">PDF Utilities</span>
+    <button class="nav-btn" onclick="showTool('i2p', this)">🖼️ Image to PDF</button>
+    <button class="nav-btn" onclick="showTool('p2i', this)">📄 PDF to Image</button>
+    <button class="nav-btn" onclick="showTool('merge', this)">🔗 PDF Merger</button>
+
+    <span class="nav-label">Pages</span>
+    <button class="nav-btn" onclick="showTool('about', this)">ℹ️ About Us</button>
+    <button class="nav-btn" onclick="showTool('contact', this)">📧 Contact Us</button>
+    <button class="nav-btn" onclick="showTool('privacy', this)">⚖️ Privacy Policy</button>
+    <button class="nav-btn" onclick="showTool('terms', this)">📝 Terms & Conditions</button>
+</div>
+
+<div class="main-content">
+    <div class="ad-container">[Header Ad Slot - 728x90]</div>
+
+    <div id="resizer" class="tool-card active">
+        <h2>Image Resizer & KB Compressor</h2>
+        <div class="ui-box">
+            <input type="file" id="rFile" accept="image/*" class="input-field">
+            <div style="display:flex; gap:10px;">
+                <input type="number" id="rW" class="input-field" placeholder="Width (px)">
+                <input type="number" id="rH" class="input-field" placeholder="Height (px)">
+            </div>
+            <input type="number" id="rKB" class="input-field" placeholder="Target Size (e.g. 50 KB)">
+            <button class="btn btn-main" onclick="runResize()">Process Image</button>
+        </div>
+        <div id="res-resize" style="display:none; text-align:center;">
+            <p id="size-tag" style="font-weight:bold; color:var(--accent);"></p>
+            <button class="btn btn-success" onclick="getDownload()">Download Resized Image</button>
+        </div>
+
+        <div class="ad-container">[In-Article Ad Slot]</div>
+
+        <div class="article-area">
+            <h3>Resize passport size photo online free</h3>
+            <p>If you are looking for the easiest way to <b>Resize passport size photo online free</b>, our tool is built for you. Most official applications require a specific dimension like 3.5x4.5cm or 2x2 inches. By entering the pixel values in our width and height boxes, you can perfectly frame your photo for any visa or job application.</p>
+            <h3>How to compress image to 50kb for online form</h3>
+            <p>One of the biggest frustrations is getting an error that says "File size too large." Our <b>Smart Compression</b> technology helps you understand <b>how to compress image to 50kb for online form</b> without losing the clarity of your face or text. Simply upload the image, type '50' in the KB box, and our algorithm will intelligently adjust the quality to fit exactly within your limit. This is 100% free and works locally in your browser.</p>
+        </div>
+    </div>
+
+    <div id="converter" class="tool-card">
+        <h2>Any Image Converter</h2>
+        <div class="ui-box">
+            <input type="file" id="cFile" accept="image/*" class="input-field">
+            <select id="cFormat" class="input-field">
+                <option value="image/jpeg">Convert to JPG</option>
+                <option value="image/png">Convert to PNG</option>
+                <option value="image/webp">Convert to WebP</option>
+            </select>
+            <button class="btn btn-main" onclick="runConvert()">Convert Now</button>
+        </div>
+        <div id="res-convert" style="display:none; text-align:center;">
+            <button class="btn btn-success" onclick="getDownload()">Download File</button>
+        </div>
+        <div class="article-area">
+            <h3>Convert Any Image Format Instantly</h3>
+            <p>Sometimes you have a PNG but need a JPG for a specific website. Our <b>Any Image Converter</b> supports all modern formats. It's fast, secure, and preserves the original colors of your photos. No need to install heavy software when you can do it all online.</p>
+        </div>
+    </div>
+
+    <div id="merge" class="tool-card">
+        <h2>PDF Merger (No Watermark)</h2>
+        <div class="ui-box">
+            <input type="file" id="mFile" accept="application/pdf" multiple class="input-field">
+            <button class="btn btn-main" onclick="runMerge()">Merge PDF Files</button>
+        </div>
+        <div id="res-merge" style="display:none; text-align:center;">
+            <p>✅ Files merged successfully!</p>
+            <button class="btn btn-success" onclick="getDownload()">Download Merged PDF</button>
+        </div>
+        <div class="article-area">
+            <h3>Best free way to merge PDF files without watermark</h3>
+            <p>Stop paying for expensive PDF tools. Our <b>Best free way to merge PDF files without watermark</b> ensures your professional documents remain clean. Whether you are combining bank statements, educational certificates, or project reports, you can join multiple PDFs into one single file in seconds. Since we don't upload files to any server, your sensitive data stays on your machine.</p>
+        </div>
+    </div>
+
+    <div id="i2p" class="tool-card">
+        <h2>Image to PDF Converter</h2>
+        <div class="ui-box">
+            <input type="file" id="i2pFile" accept="image/*" multiple class="input-field">
+            <button class="btn btn-main" onclick="runI2P()">Create PDF</button>
+        </div>
+        <div id="res-i2p" style="display:none; text-align:center;">
+            <button class="btn btn-success" onclick="getDownload()">Download PDF</button>
+        </div>
+        <div class="article-area">
+            <h3>Convert JPG to PDF offline on mobile browser</h3>
+            <p>Our tool is perfectly optimized to <b>Convert JPG to PDF offline on mobile browser</b>. If you are a student taking photos of your notes and need to send them as a single PDF to your teacher, simply select all photos and hit create. It works even without an active internet connection once the page is loaded, saving your mobile data.</p>
+        </div>
+    </div>
+
+    <div id="p2i" class="tool-card">
+        <h2>PDF to Image Converter</h2>
+        <div class="ui-box">
+            <input type="file" id="p2iFile" accept="application/pdf" class="input-field">
+            <button class="btn btn-main" onclick="runP2I()">Extract JPG</button>
+        </div>
+        <div id="res-p2i" style="display:none; text-align:center;">
+            <canvas id="p2iCanvas" style="max-width:100%; border-radius:10px; margin-bottom:15px;"></canvas>
+            <button class="btn btn-success" onclick="getDownload()">Download Image</button>
+        </div>
+    </div>
+
+    <div id="about" class="tool-card">
+        <h2>About FileMaster Pro</h2>
+        <div class="article-area">
+            <p>FileMaster Pro is a leading provider of browser-based file utility tools. Founded in 2026, we aim to provide privacy-first tools for everyone. We specialize in Image and PDF processing without requiring server uploads. Your security is our priority.</p>
+        </div>
+    </div>
+
+    <div id="contact" class="tool-card">
+        <h2>Contact Us</h2>
+        <div class="article-area">
+            <p>Questions? Suggestions? Reach us at: <b>support@filemasterpro.com</b></p>
+            <p>Our team responds to all queries within 24-48 hours. We are based in Karachi, Pakistan.</p>
+        </div>
+    </div>
+
+    <div id="privacy" class="tool-card">
+        <h2>Privacy Policy</h2>
+        <div class="article-area">
+            <p>At FileMaster Pro, we do not collect, store, or share your files. All conversions and resizing happen locally in your browser using JavaScript. We use Google AdSense which may use cookies to serve personalized ads based on your interests.</p>
+        </div>
+    </div>
+
+    <div id="terms" class="tool-card">
+        <h2>Terms & Conditions</h2>
+        <div class="article-area">
+            <p>By using this site, you agree to our terms. We are not liable for any data loss. This tool is provided free of charge for personal and professional use.</p>
+        </div>
+    </div>
+
+    <div class="ad-container">[Footer Ad Slot - 728x90]</div>
+</div>
+
+<div id="adModal">
+    <div class="modal-box">
+        <h3>File is Ready!</h3>
+        <p>Your download will start after this short sponsor message.</p>
+        <div style="height:200px; background:#f1f5f9; border:1px solid #ddd; margin:20px 0; display:flex; align-items:center; justify-content:center;">
+            [PLACE ADSTERRA/ADSENSE POPUP CODE]
+        </div>
+        <button class="btn btn-main" onclick="hideAd()">Skip & Download</button>
+    </div>
+</div>
+
+<script>
+    let clicks = 0;
+    let store = { data: null, name: "" };
+
+    function showTool(id, btn) {
+        document.querySelectorAll('.tool-card').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function getDownload() {
+        clicks++;
+        if(clicks % 3 === 0) document.getElementById('adModal').style.display = 'flex';
+        else finalize();
+    }
+
+    function hideAd() {
+        document.getElementById('adModal').style.display = 'none';
+        finalize();
+    }
+
+    function finalize() {
+        if(!store.data) return;
+        const a = document.createElement('a');
+        a.href = store.data;
+        a.download = store.name;
+        a.click();
+    }
+
+    // --- RESIZE & COMPRESS LOGIC ---
+    async function runResize() {
+        const f = document.getElementById('rFile').files[0];
+        const w = parseInt(document.getElementById('rW').value);
+        const h = parseInt(document.getElementById('rH').value);
+        const kb = parseInt(document.getElementById('rKB').value);
+        if(!f) return alert("Select Image!");
+
+        const img = new Image();
+        img.src = URL.createObjectURL(f);
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = w || img.width;
+            canvas.height = h || img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            let q = 0.92;
+            let data = canvas.toDataURL('image/jpeg', q);
+            if(kb) {
+                while((data.length/1024) > kb && q > 0.05) {
+                    q -= 0.05;
+                    data = canvas.toDataURL('image/jpeg', q);
+                }
+            }
+            store = { data: data, name: "resized_image.jpg" };
+            document.getElementById('size-tag').innerText = `Final Size: ${Math.round(data.length/1024)} KB`;
+            document.getElementById('res-resize').style.display = 'block';
+        }
+    }
+
+    // --- CONVERTER LOGIC ---
+    async function runConvert() {
+        const f = document.getElementById('cFile').files[0];
+        const fmt = document.getElementById('cFormat').value;
+        if(!f) return alert("Select Image!");
+        const img = new Image();
+        img.src = URL.createObjectURL(f);
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width; canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            store = { data: canvas.toDataURL(fmt), name: "converted_file." + fmt.split('/')[1] };
+            document.getElementById('res-convert').style.display = 'block';
+        }
+    }
+
+    // --- PDF MERGE LOGIC ---
+    async function runMerge() {
+        const files = document.getElementById('mFile').files;
+        if(files.length < 2) return alert("Select 2+ PDFs");
+        const { PDFDocument } = PDFLib;
+        const merged = await PDFDocument.create();
+        for(const f of files) {
+            const doc = await PDFDocument.load(await f.arrayBuffer());
+            const pages = await merged.copyPages(doc, doc.getPageIndices());
+            pages.forEach(p => merged.addPage(p));
+        }
+        const bytes = await merged.save();
+        store = { data: URL.createObjectURL(new Blob([bytes], {type:'application/pdf'})), name: "merged.pdf" };
+        document.getElementById('res-merge').style.display = 'block';
+    }
+
+    // --- IMAGE TO PDF LOGIC ---
+    async function runI2P() {
+        const files = document.getElementById('i2pFile').files;
+        if(!files.length) return alert("Select Images");
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        for(let i=0; i<files.length; i++) {
+            const data = await new Promise(r => {
+                const rd = new FileReader();
+                rd.onload = () => r(rd.result);
+                rd.readAsDataURL(files[i]);
+            });
+            if(i > 0) doc.addPage();
+            doc.addImage(data, 'JPEG', 10, 10, 190, 150);
+        }
+        store = { data: doc.output('bloburl'), name: "document.pdf" };
+        document.getElementById('res-i2p').style.display = 'block';
+    }
+
+    // --- PDF TO IMAGE LOGIC ---
+    async function runP2I() {
+        const f = document.getElementById('p2iFile').files[0];
+        if(!f) return alert("Select PDF");
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const typedarray = new Uint8Array(this.result);
+            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+            const page = await pdf.getPage(1);
+            const canvas = document.getElementById('p2iCanvas');
+            const viewport = page.getViewport({scale: 2});
+            canvas.width = viewport.width; canvas.height = viewport.height;
+            await page.render({canvasContext: canvas.getContext('2d'), viewport: viewport}).promise;
+            store = { data: canvas.toDataURL('image/jpeg'), name: "pdf_page.jpg" };
+            document.getElementById('res-p2i').style.display = 'block';
+        };
+        reader.readAsArrayBuffer(f);
+    }
+</script>
+
+</body>
+</html>
